@@ -55,7 +55,7 @@ lst = copy.deepcopy(numbers)
 print(lst)
 
 tic = time.perf_counter()
-print(recursive_sort.mergeSort(numbers))
+print(iterative_sort.mergeSort(numbers))
 toc = time.perf_counter()
 print(f"mergeSort time: {toc - tic:0.7f}")
 
@@ -64,7 +64,7 @@ lst = copy.deepcopy(numbers)
 print(lst)
 
 tic = time.perf_counter()
-print(recursive_sort.bubbleSort(lst, len(lst)))
+print(iterative_sort.bubbleSort(lst, len(lst)))
 toc = time.perf_counter()
 print(f"bubbleSort time: {toc - tic:0.7f}")
 
@@ -73,7 +73,7 @@ lst = copy.deepcopy(numbers)
 print(lst)
 
 tic = time.perf_counter()
-print(recursive_sort.quickSort(lst, 0, len(lst) - 1))
+print(iterative_sort.quickSort(lst, 0, len(lst) - 1))
 toc = time.perf_counter()
 print(f"quickSort time: {toc - tic:0.7f}")
 
@@ -82,6 +82,6 @@ lst = copy.deepcopy(numbers)
 print(lst)
 
 tic = time.perf_counter()
-print(recursive_sort.heapSort(lst))
+print(iterative_sort.heapSort(lst))
 toc = time.perf_counter()
 print(f"heapSort time: {toc - tic:0.7f}")
