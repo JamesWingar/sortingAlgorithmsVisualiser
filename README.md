@@ -32,8 +32,10 @@ pip install -r requirements.txt
 * TODO
 
 ## Summary
+* TODO
 
 ## GUI
+* TODO
 
 ## ToDo
 * Add iterative sorting algorithms
