@@ -38,8 +38,8 @@ pip install -r requirements.txt
 * TODO
 
 ## ToDo
-* Add iterative sorting algorithms
+* ~~Add iterative sorting algorithms~~
 * Design visual algorithms GUI
 * Add GUI class
-* Run step throw algorithms
+* Run step through algorithms
 * Add further tests
