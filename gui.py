@@ -13,9 +13,6 @@ OPERATION_KEYS = [pygame.K_SPACE, pygame.K_ESCAPE,
                   pygame.K_RETURN, pygame.K_BACKSPACE]
 
 
-
-
-
 class Visual_sorting_algorithms:
     """ This class displays four graphs of major sorting algorithms using the
     pygame GUI. The graphs should work in realtime (using multi-threading) and
