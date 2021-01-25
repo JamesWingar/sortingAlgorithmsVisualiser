@@ -9,7 +9,6 @@ import utility
 from sort import recursive_sort
 from sort import iterative_sort
 
-
 NUMBERS = [7, 3, 9, 5, 6, 0, 1, 2, 4, 8]
 NUMBERS_SORTED = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
@@ -27,7 +26,7 @@ class TestRecursiveSort(unittest.TestCase):
     # test merge sort with random list length 100
     def test_rand_mergeSort(self):
         lst = cloning(self.rand_numbers)
-        self.assertTrue(is_sorted(recursive_sort.mergeSort(lst)))
+        self.assertTrue(utility.is_sorted(recursive_sort.mergeSort(lst)))
 
     # test bubble sort with length 10
     def test_bubbleSort(self):
@@ -37,7 +36,7 @@ class TestRecursiveSort(unittest.TestCase):
     # test bubble sort with random list length 100
     def test_rand_bubbleSort(self):
         lst = cloning(self.rand_numbers)
-        self.assertTrue(is_sorted(recursive_sort.bubbleSort(lst, len(lst))))
+        self.assertTrue(utility.is_sorted(recursive_sort.bubbleSort(lst, len(lst))))
 
     # test quick sort with length 10
     def test_quickSort(self):
@@ -47,7 +46,7 @@ class TestRecursiveSort(unittest.TestCase):
     # test quick sort with random list length 100
     def test_rand_quickSort(self):
         lst = cloning(self.rand_numbers)
-        self.assertTrue(is_sorted(recursive_sort.quickSort(lst, 0, len(lst) - 1)))
+        self.assertTrue(utility.is_sorted(recursive_sort.quickSort(lst, 0, len(lst) - 1)))
 
     # test heap sort with length 10
     def test_heapSort(self):
@@ -57,7 +56,7 @@ class TestRecursiveSort(unittest.TestCase):
     # test heap sort with random list length 100
     def test_rand_heapSort(self):
         lst = cloning(self.rand_numbers)
-        self.assertTrue(is_sorted(recursive_sort.heapSort(lst)))
+        self.assertTrue(utility.is_sorted(recursive_sort.heapSort(lst)))
 
 
 # Testing the iterative sorting algorithms
@@ -73,7 +72,7 @@ class TestIterativeSort(unittest.TestCase):
     # test merge sort with random list length 100
     def test_rand_mergeSort(self):
         lst = cloning(self.rand_numbers)
-        self.assertTrue(is_sorted(iterative_sort.mergeSort(lst)))
+        self.assertTrue(utility.is_sorted(iterative_sort.mergeSort(lst)))
 
     # test bubble sort with length 10
     def test_bubbleSort(self):
@@ -83,7 +82,7 @@ class TestIterativeSort(unittest.TestCase):
     # test bubble sort with random list length 100
     def test_rand_bubbleSort(self):
         lst = cloning(self.rand_numbers)
-        self.assertTrue(is_sorted(iterative_sort.bubbleSort(lst)))
+        self.assertTrue(utility.is_sorted(iterative_sort.bubbleSort(lst)))
 
     # test quick sort with length 10
     def test_quickSort(self):
@@ -93,7 +92,7 @@ class TestIterativeSort(unittest.TestCase):
     # test quick sort with random list length 100
     def test_rand_quickSort(self):
         lst = cloning(self.rand_numbers)
-        self.assertTrue(is_sorted(iterative_sort.quickSort(lst)))
+        self.assertTrue(utility.is_sorted(iterative_sort.quickSort(lst)))
 
     # test heap sort with length 10
     def test_heapSort(self):
@@ -103,19 +102,12 @@ class TestIterativeSort(unittest.TestCase):
     # test heap sort with random list length 100
     def test_rand_heapSort(self):
         lst = cloning(self.rand_numbers)
-        self.assertTrue(is_sorted(iterative_sort.heapSort(lst)))
+        self.assertTrue(utility.is_sorted(iterative_sort.heapSort(lst)))
 
 
 def cloning(lst):
     lst_copy = lst[:]
     return lst_copy
-
-
-def is_sorted(array):
-    for i in range(len(array) - 1):
-        if array[i] > array[i + 1]:
-            return False
-    return True
 
 
 if __name__ == "__main__":
