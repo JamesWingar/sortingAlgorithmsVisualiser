@@ -39,7 +39,12 @@ pip install -r requirements.txt
 
 ## ToDo
 * ~~Add iterative sorting algorithms~~
-* Design visual algorithms GUI
-* Add GUI class
-* Run step through algorithms
+* ~~Design visual algorithms GUI~~
+* ~~Add GUI class~~
+* ~~Run step through algorithms~~
+* Clean up GUI code
+* Add utility functions to create best and worse arrays (ordered and reverse order)
+* Add running of worst, average and best case scenarios
+* Display above timings
+* Tidy project
 * Add further tests
