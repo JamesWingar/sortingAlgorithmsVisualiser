@@ -15,15 +15,17 @@ OPERATION_KEYS = [pygame.K_SPACE, pygame.K_ESCAPE,
 
 class Visual_sorting_algorithms:
     """ This class displays four graphs of major sorting algorithms using the
-    pygame GUI. The graphs should work in realtime (using multi-threading) and
-    be comparable between each algorithm.
-    Usage:
-    Input parameter:
+    pygame GUI. The graphs should work in relative time (using multi-threading)
+    and be comparable between each algorithm.
+    Usage: Press R to reset and generate a new set of arrays
+    Input parameter: n - defines the length of the arrays being sorted
     Contains follow member methods:
-        run(): Main loop to run the Draw and Input of the program
+        run(): Main control loop to start threads and draw, control and input
+               of the processeses
+        draw(): Draws the titles, counters and graphs
     """
 
-    def __init__(self, starting_array):
+    def __init__(self, n):
 
         # initialise
         pygame.init()
@@ -35,13 +37,6 @@ class Visual_sorting_algorithms:
 
         # set colours
         self.BACKGROUND = pygame.Color(220, 220, 220, 0)
-        self.BLACK = pygame.Color(0, 0, 0, 0)
-        self.RED = pygame.Color(220, 20, 20, 0)
-        self.GREEN = pygame.Color(50, 200, 50, 0)
-        self.GREY = pygame.Color(120, 120, 120, 0)
-
-        # set random value list
-        self.starting_array = starting_array
 
         # set screen surface
         self.surface = pygame.display.set_mode((SURFACE_SIZE, SURFACE_SIZE))
@@ -50,19 +45,35 @@ class Visual_sorting_algorithms:
         self.graph_coords = [[GRAPH_SIZE/3, GRAPH_SIZE/3],  # top left
                              [GRAPH_SIZE * 5/3, GRAPH_SIZE/3],  # top right
                              [GRAPH_SIZE/3, GRAPH_SIZE * 5/3],  # bot left
-                             [GRAPH_SIZE * 5/3, GRAPH_SIZE * 5/3]] # bot right
+                             [GRAPH_SIZE * 5/3, GRAPH_SIZE * 5/3]]  # bot right
 
-        self.algorithms = ['bubbleSort', 'quickSort', 'heapSort', 'mergeSort']
+        # set array_length
+        self.array_length = n
 
+        # define value arrays
+        self.random_array = utility.createRandList(self.array_length)
+        self.sorted_array = utility.createSortedList(self.array_length)
+        self.rev_sorted_array = utility.createRevSortedList(self.array_length)
+
+        # define graph storing array
         self.graphs = []
 
-    def run(self):
-        while(1):
-            # TODO - add running just the algorithms and display time taken
+        # define sorting algorithms
+        self.algorithms = ['bubbleSort', 'quickSort', 'heapSort', 'mergeSort']
 
-            # created graph classes
-            self.graphs = [graph(self.surface, self.starting_array[:], self.graph_coords[i], algorithm) for i, algorithm in enumerate(self.algorithms)]
-            # start each graph thread
+    def run(self):
+
+        while(1):
+            # output sort timing data to console
+            utility.createSortTimeData(self.algorithms,
+                                       [self.random_array[:],
+                                        self.sorted_array[:],
+                                        self.rev_sorted_array[:]])
+            # create graph classes
+            self.graphs = [graph(self.surface, self.random_array[:],
+                                 self.graph_coords[i], algorithm)
+                           for i, algorithm in enumerate(self.algorithms)]
+            # start graph threads
             for grph in self.graphs:
                 grph.start()
 
@@ -84,7 +95,9 @@ class Visual_sorting_algorithms:
                         pygame.quit()
                         quit()
 
-            self.starting_array = utility.createRandList(100)
+            self.random_array = utility.createRandList(self.array_length)
+            self.sorted_array = utility.createSortedList(self.array_length)
+            self.rev_sorted_array = utility.createRevSortedList(self.array_length)
 
     def draw(self):
         self.surface.fill(self.BACKGROUND)
@@ -96,13 +109,20 @@ class Visual_sorting_algorithms:
 
 
 class graph(threading.Thread):
-    """ This class creates a graph with the associated  four graphs of major sorting algorithms using the
-    pygame GUI. The graphs should work in realtime (using multi-threading) and
-    be comparable between each algorithm.
-    Usage:
-    Input parameter:
+    """ This class creates a graph of major sorting algorithms using the pygame
+    GUI. Each class runs in a separate thread to run independent.
     Contains follow member methods:
-        run(): Main loop to run the Draw and Input of the program
+        run(): Main loop to run sorting algorithm
+        draw(): main draw function (graph, title and counter)
+        draw_title(): draws the graph title
+        draw_counter(): draws the algorithm array swaps counter
+        switch_threah(): Increments swap counter and initiates thread switch
+                         through time.sleep()
+        bubbleSort(): Implements iterative bubble sort algorithm
+        quickSort(): Implements iterative quick sort algorithm
+        heapSort(): Implements iterative heap sort algorithm
+        heapify(): Builds max heap from array
+        mergeSort(): Implements iterative merge sort algorithm
     """
     def __init__(self, surface, values, coords, algorithm):
         threading.Thread.__init__(self)
@@ -110,10 +130,12 @@ class graph(threading.Thread):
         self.surface = surface
         self.array = values
 
+        # set absolute coords
         self.coords = coords
-        self.title_coords = [coords[0] + GRAPH_SIZE/2, coords[1]]
-        self.counter_coords = [coords[0] + GRAPH_SIZE/2, coords[1] + GRAPH_SIZE]
+        self.title_coords = [coords[0] + GRAPH_SIZE/2, coords[1]-GRAPH_SIZE/15]
+        self.counter_coords = [coords[0] + GRAPH_SIZE/2, coords[1]]
 
+        # define algorithms
         self.algorithm = algorithm
         self.algo_methods = {
             'bubbleSort': self.bubbleSort,
@@ -125,53 +147,63 @@ class graph(threading.Thread):
         # set colours
         self.BLACK = pygame.Color(0, 0, 0, 0)
         self.RED = pygame.Color(220, 20, 20, 0)
+        self.GREEN = pygame.Color(50, 180, 50, 0)
 
         # set fonts
         self.title_font = pygame.font.SysFont("calibri", 30)
         self.counter_font = pygame.font.SysFont("calibri", 15)
 
         # set variables
+        self.sorted = 0
         self.counter = 0
         self.swap_A = None
         self.swap_B = None
 
     def run(self):
-        # call sort function
-        self.algo_methods[self.algorithm]()
+        self.algo_methods[self.algorithm]()  # call sort function
         self.switch_thread()
+        self.sorted = 1
         self.draw()
 
     def draw(self):
         self.draw_title()
         self.draw_counter()
-        # draw each line in box
-        for i, value in enumerate(self.array):
+
+        colour = self.BLACK
+        if self.sorted == 1:
+            colour = self.GREEN
+
+        for i, value in enumerate(self.array):  # draw each line in box
             x = self.coords[0] + (GRAPH_SIZE * (i / len(self.array)))
             y1 = self.coords[1] + GRAPH_SIZE
             y2 = self.coords[1] + GRAPH_SIZE - (GRAPH_SIZE * value/100)
 
             if i == self.swap_A or i == self.swap_B:
-                pygame.draw.line(self.surface, self.RED, (x, y1), (x, y2), width=2)
+                pygame.draw.line(self.surface, self.RED,
+                                 (x, y1), (x, y2), width=2)
             else:
-                pygame.draw.line(self.surface, self.BLACK, (x, y1), (x, y2), width=2)
+                pygame.draw.line(self.surface, colour,
+                                 (x, y1), (x, y2), width=2)
 
     def draw_title(self):
-        (text_width, text_height) = self.title_font.size(str(self.algorithm))
-        self.surface.blit(self.title_font.render(str(self.algorithm), 1, self.BLACK),
+        text = str(self.algorithm)
+        (text_width, text_height) = self.title_font.size(text)
+        self.surface.blit(self.title_font.render(text, 1, self.BLACK),
                           (self.title_coords[0] - text_width/2,
                           self.title_coords[1] - text_height))
 
     def draw_counter(self):
-        (text_width, text_height) = self.counter_font.size(f"Array swaps: {str(self.counter)}")
-        self.surface.blit(self.counter_font.render(f"Array swaps: {str(self.counter)}", 1, self.BLACK),
+        text = f"Array swaps: {str(self.counter)}"
+        (text_width, text_height) = self.counter_font.size(text)
+        self.surface.blit(self.counter_font.render(text, 1, self.BLACK),
                           (self.counter_coords[0] - text_width/2,
-                          self.counter_coords[1] + text_height))
+                          self.counter_coords[1] - text_height))
 
     def switch_thread(self, index_A=None, index_B=None):
         self.counter += 1
         self.swap_A = index_A
         self.swap_B = index_B
-        time.sleep(0.01)
+        time.sleep(0.01)  # initiates thread switch
 
     # ------------ ITERATIVE SORTING ALGORITHM IMPLEMENTATIONS ----------------
 
