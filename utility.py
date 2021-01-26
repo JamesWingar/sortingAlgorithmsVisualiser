@@ -8,6 +8,7 @@ from sort import recursive_sort
 from sort import iterative_sort
 
 
+# Creates a list of rnadom order unique values from 0 to n
 def createRandList(n):
     values = [val for val in range(n)]
     array = []
@@ -18,14 +19,17 @@ def createRandList(n):
     return array
 
 
+# Creates a list of ordered values from 0 to n
 def createSortedList(n):
     return [val for val in range(n)]
 
 
+# Creates a list of reverse ordered values from n to 0
 def createRevSortedList(n):
     return [val for val in range(n-1, -1, -1)]
 
 
+# Checks if an array is sorted
 def is_sorted(array):
     for i in range(len(array) - 1):
         if array[i] > array[i + 1]:
@@ -33,6 +37,9 @@ def is_sorted(array):
     return True
 
 
+# Creates pretty table of timing data for each sorting algorithm
+# in both iterative and recursive methods with different arrays
+# (Sorted (best), Reverse sorted (worst) and Random order (average))
 def createSortTimeData(algorithms, arrays):
 
     timeTable = PrettyTable(["(Random, Sorted, R-Sorted)ms"] + algorithms)
@@ -56,19 +63,16 @@ def createSortTimeData(algorithms, arrays):
 
     for sort in algorithms:
 
-        values = []
+        iterative_values = []
+        recursive_values = []
         for array in arrays:
             lst = array[:]
             tic = time.perf_counter()
             iterative_methods[sort](lst)
             toc = time.perf_counter()
 
-            values.append((toc - tic) * 100)
-        # generate iterative row
-        table[0].append("(" + ", ".join([str(round(val, 4)) for val in values]) + ")ms")
+            iterative_values.append((toc - tic) * 100)
 
-        values = []
-        for array in arrays:
             lst = array[:]
             tic = time.perf_counter()
             if sort == 'bubbleSort':
@@ -79,9 +83,12 @@ def createSortTimeData(algorithms, arrays):
                 recursive_methods[sort](lst)
             toc = time.perf_counter()
 
-            values.append((toc - tic) * 100)
+            recursive_values.append((toc - tic) * 1000)
+
+        # generate iterative row
+        table[0].append(f"({', '.join([str(round(val, 4)) for val in iterative_values])})ms")
         # generate recursive row
-        table[1].append("(" + ", ".join([str(round(val, 4)) for val in values]) + ")ms")
+        table[1].append(f"({', '.join([str(round(val, 4)) for val in recursive_values])})ms")
 
     # add rows to table
     for row in range(2):
