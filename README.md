@@ -16,7 +16,10 @@ This project is designed to display four major (popular) sorting algorithms usin
 
 ## Install
 Sorting Algorithm Visualiser supports being run on Python 3.8+ with the pygame library as the only python module for the GUI.    
-[git](https://git-scm.com/downloads)     [python3](https://www.python.org/download/releases/3.0/)     [pip](https://pypi.org/project/pip/)     [pygame](https://www.pygame.org/)
+- [git](https://git-scm.com/downloads)
+- [python3](https://www.python.org/download/releases/3.0/)
+- [pip](https://pypi.org/project/pip/)
+- [pygame](https://www.pygame.org/)
 
 To install follow the instructions below:
 1. Open a command line tool (eg. Linux -> Terminal, Windows -> Powershell)
